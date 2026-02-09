@@ -1,19 +1,19 @@
-// // Prepare the table to display the results
-// let tabTop = `<table><thead>
-//                 <th>Customer</th><th>Product</th>
-//                 <th>Quantity</th><th>Subtotal</th><th>Discount</th><th>Total</th>
-//                 </thead>`;
-// let tabBot = "</tbody></table>";
-// let content = "<tbody>";
-
+// Prepare the table to display the results
 let tabTop = `<table><thead>
-                <th>Name</th><th>Product</th>
-                <th>Quantity</th><th>Promo Code</th><th>Postal Code</th><th>Phone Number</th>
+                <th>Customer</th><th>Product</th>
+                <th>Quantity</th><th>Subtotal</th><th>Discount</th><th>Total</th>
                 </thead>`;
 let tabBot = "</tbody></table>";
 let content = "<tbody>";
 
-let totalNumOrders = 0, totalQuantity = 0, totalRevenue = 0;
+// let tabTop = `<table><thead>
+//                 <th>Name</th><th>Product</th>
+//                 <th>Quantity</th><th>Promo Code</th><th>Postal Code</th><th>Phone Number</th>
+//                 </thead>`;
+// let tabBot = "</tbody></table>";
+// let content = "<tbody>";
+
+let totalOrders = 0, totalQuantity = 0, totalRevenue = 0;
 
 // Returns the price according to the the product type
 const getPrice = (productType) => {
@@ -42,13 +42,15 @@ const calculateDiscount = (subTotal, quantity, promoCode) => {
     if(promoCode.toLowerCase() === "save20") {
         discount += 20;
     }
+
+    return discount;
 }
 
 // Calculates the final total after discount and tax
 const calculateFinalTotal = (subTotal, discount) => {
     // Add the discount
     let total = subTotal - discount;
-    // The minimum value is 0
+    // The minimum value for the total is 0
     if(total < 0) {
         total = 0;
     }
@@ -59,6 +61,35 @@ const calculateFinalTotal = (subTotal, discount) => {
 // Evaluates a regular expression on an input
 const validateWithRegExp = (regExp, inputString) => {
     return regExp.test(inputString);
+}
+
+// Updates the summary section
+const updateSummary = (totalOrders, totalQuantity, totalRevenue) => {
+    let summary = document.getElementById("summary");
+
+    // Clear the summary
+    summary.innerHTML = "";
+    
+    // Create the heading
+    let summaryTitle = document.createElement("h2");
+    summaryTitle.textContent = "Summary";
+    summary.appendChild(summaryTitle);
+
+    // Add the total number of orders
+    let totalOrdersP = document.createElement("p");
+    totalOrdersP.textContent = `Total number of orders: ${totalOrders}`;
+    summary.appendChild(totalOrdersP);
+
+    // Add the total quantity ordered
+    let totalQuantityP = document.createElement("p");
+    totalQuantityP.textContent = `Total quantity ordered: ${totalQuantity}`;
+    summary.appendChild(totalQuantityP);
+
+    // Add the total revenue
+    let totalRevenueP = document.createElement("p");
+    totalRevenueP.textContent = `Total revenue: $${totalRevenue.toFixed(2)}`;
+    summary.appendChild(totalRevenueP);
+
 }
 
 const addOrder = () => {
@@ -78,25 +109,33 @@ const addOrder = () => {
     if(name.trim().length >= 2 && Number.isInteger(Number(quantity)) && Number(quantity) >= 1 &&
         validateWithRegExp(postalRegExp, postalCode) && validateWithRegExp(phoneRegExp, phoneNumber)) {
         
-        // quantity = parseInt(quantity);
-        // // Get the price of the product
-        // let productPrice = getPrice(productType);
+        quantity = parseInt(quantity);
 
-        // // Calculate the subtotal
-        // let subTotal = productPrice * quantity;
+        // Get the price of the product
+        let productPrice = getPrice(productType);
 
-        // // Add the discount and tax
-        // let discount = calculateDiscount(subTotal, quantity, promoCode);
-        // let total = calculateFinalTotal(subTotal, discount);
-        
+        // Calculate the subtotal
+        let subTotal = productPrice * quantity;
 
-        content += `<tr><td>${name}</td><td>${productType}</td><td>${quantity}</td><td>${promoCode}</td>
-                    <td>${postalCode}</td><td>${phoneNumber}</td></tr>`;
-        document.getElementById("right").innerHTML = tabTop + content + tabBot;
+        // Add the discount and tax
+        let discount = calculateDiscount(subTotal, quantity, promoCode);
+        let total = calculateFinalTotal(subTotal, discount);
+
+        // Update the summary variables
+        totalOrders++;
+        totalQuantity += quantity;
+        totalRevenue += total;
+
+        // Update the summary
+        updateSummary(totalOrders, totalQuantity, totalRevenue);
+
+        content += `<tr><td>${name}</td><td>${productType}</td><td>${quantity}</td><td>$${subTotal.toFixed(2)}</td>
+                    <td>-$${discount.toFixed(2)}</td><td>$${total.toFixed(2)}</td></tr>`;
+        document.getElementById("receipt").innerHTML = tabTop + content + tabBot;
 
     }
     else {
-        document.getElementById("right").innerText = "Error: Invalid input";
+        document.getElementById("right").textContent = "Error: Invalid input";
     }
 
     
