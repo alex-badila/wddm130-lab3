@@ -1,4 +1,4 @@
-// Prepare the table to display the results
+// // Prepare the table to display the results
 // let tabTop = `<table><thead>
 //                 <th>Customer</th><th>Product</th>
 //                 <th>Quantity</th><th>Subtotal</th><th>Discount</th><th>Total</th>
@@ -62,8 +62,8 @@ const validateWithRegExp = (regExp, inputString) => {
 }
 
 const addOrder = () => {
-    let postalRegEx = /^[a-zA-Z]\d[a-zA-Z]\s\d[a-zA-Z]\d$/;
-    let phoneRegEx = /^\(?\d{3}\)?(\s|-)\d{3}(\s|-)\d{4}$/;
+    let postalRegExp = /^[a-zA-Z]\d[a-zA-Z]\s\d[a-zA-Z]\d$/;
+    let phoneRegExp = /^\(?\d{3}\)?(\s|-)\d{3}(\s|-)\d{4}$/;
 
     // Extract the information from the form
     let thisForm = document.forms["orderForm"];
@@ -74,21 +74,31 @@ const addOrder = () => {
     let postalCode = thisForm["postalCode"].value;
     let phoneNumber = thisForm["phoneNumber"].value;
 
+    // Perform validation of the inputs
+    if(name.trim().length >= 2 && Number.isInteger(Number(quantity)) && Number(quantity) >= 1 &&
+        validateWithRegExp(postalRegExp, postalCode) && validateWithRegExp(phoneRegExp, phoneNumber)) {
+        
+        // quantity = parseInt(quantity);
+        // // Get the price of the product
+        // let productPrice = getPrice(productType);
 
-    // // Get the price of the product
-    // let productPrice = getPrice(productType);
+        // // Calculate the subtotal
+        // let subTotal = productPrice * quantity;
 
-    // // Calculate the subtotal
-    // let subTotal = productPrice * quantity;
+        // // Add the discount and tax
+        // let discount = calculateDiscount(subTotal, quantity, promoCode);
+        // let total = calculateFinalTotal(subTotal, discount);
+        
 
-    // // Add the discount and tax
-    // let discount = calculateDiscount(subTotal, quantity, promoCode);
-    // let total = calculateFinalTotal(subTotal, discount);
+        content += `<tr><td>${name}</td><td>${productType}</td><td>${quantity}</td><td>${promoCode}</td>
+                    <td>${postalCode}</td><td>${phoneNumber}</td></tr>`;
+        document.getElementById("right").innerHTML = tabTop + content + tabBot;
+
+    }
+    else {
+        document.getElementById("right").innerText = "Error: Invalid input";
+    }
+
     
-
-    content += `<tr><td>${name}</td><td>${productType}</td><td>${quantity}</td><td>${promoCode}</td>
-                <td>${postalCode}</td><td>${phoneNumber}</td></tr>`;
-    document.getElementById("right").innerHTML = tabTop + content + tabBot;
-
     return false;
 }
