@@ -1,0 +1,12 @@
+main {
+    display: flex;
+}
+
+#left {
+    flex-basis: 400px;
+    padding: 10px;
+}
+
+#right {
+    flex-basis: 400px;
+}

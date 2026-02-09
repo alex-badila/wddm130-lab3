@@ -64,37 +64,47 @@ const validateWithRegExp = (regExp, inputString) => {
 }
 
 // Updates the summary section
-const updateSummary = (totalOrders, totalQuantity, totalRevenue) => {
+const updateSummary = (totalOrders, totalQuantity, totalRevenue, invalidInput) => {
     let summary = document.getElementById("summary");
 
-    // Clear the summary
-    summary.innerHTML = "";
+    // Check to see if there was invalid input
+    if(invalidInput) {
+        // If so, print an error message to the summary
+        summary.textContent = "Error: Invalid input";
+    }
+    // Otherwise, print the summary to the page
+    else {
+        // Clear the summary
+        summary.innerHTML = "";
     
-    // Create the heading
-    let summaryTitle = document.createElement("h2");
-    summaryTitle.textContent = "Summary";
-    summary.appendChild(summaryTitle);
+        // Create the heading
+        let summaryTitle = document.createElement("h2");
+        summaryTitle.textContent = "Summary";
+        summary.appendChild(summaryTitle);
 
-    // Add the total number of orders
-    let totalOrdersP = document.createElement("p");
-    totalOrdersP.textContent = `Total number of orders: ${totalOrders}`;
-    summary.appendChild(totalOrdersP);
+        // Add the total number of orders
+        let totalOrdersP = document.createElement("p");
+        totalOrdersP.textContent = `Total number of orders: ${totalOrders}`;
+        summary.appendChild(totalOrdersP);
 
-    // Add the total quantity ordered
-    let totalQuantityP = document.createElement("p");
-    totalQuantityP.textContent = `Total quantity ordered: ${totalQuantity}`;
-    summary.appendChild(totalQuantityP);
+        // Add the total quantity ordered
+        let totalQuantityP = document.createElement("p");
+        totalQuantityP.textContent = `Total quantity ordered: ${totalQuantity}`;
+        summary.appendChild(totalQuantityP);
 
-    // Add the total revenue
-    let totalRevenueP = document.createElement("p");
-    totalRevenueP.textContent = `Total revenue: $${totalRevenue.toFixed(2)}`;
-    summary.appendChild(totalRevenueP);
+        // Add the total revenue
+        let totalRevenueP = document.createElement("p");
+        totalRevenueP.textContent = `Total revenue: $${totalRevenue.toFixed(2)}`;
+        summary.appendChild(totalRevenueP);
+    }
 
 }
 
+// Add the order to the page
 const addOrder = () => {
     let postalRegExp = /^[a-zA-Z]\d[a-zA-Z]\s\d[a-zA-Z]\d$/;
     let phoneRegExp = /^\(?\d{3}\)?(\s|-)\d{3}(\s|-)\d{4}$/;
+    let invalidInput = false;
 
     // Extract the information from the form
     let thisForm = document.forms["orderForm"];
@@ -127,15 +137,17 @@ const addOrder = () => {
         totalRevenue += total;
 
         // Update the summary
-        updateSummary(totalOrders, totalQuantity, totalRevenue);
+        updateSummary(totalOrders, totalQuantity, totalRevenue, invalidInput);
 
         content += `<tr><td>${name}</td><td>${productType}</td><td>${quantity}</td><td>$${subTotal.toFixed(2)}</td>
                     <td>-$${discount.toFixed(2)}</td><td>$${total.toFixed(2)}</td></tr>`;
         document.getElementById("receipt").innerHTML = tabTop + content + tabBot;
 
     }
+    // If there is invalid input, display an error message on the page
     else {
-        document.getElementById("right").textContent = "Error: Invalid input";
+        invalidInput = true;
+        updateSummary(0, 0, 0, invalidInput);
     }
 
     
