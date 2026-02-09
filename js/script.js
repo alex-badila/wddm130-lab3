@@ -1,7 +1,14 @@
 // Prepare the table to display the results
+// let tabTop = `<table><thead>
+//                 <th>Customer</th><th>Product</th>
+//                 <th>Quantity</th><th>Subtotal</th><th>Discount</th><th>Total</th>
+//                 </thead>`;
+// let tabBot = "</tbody></table>";
+// let content = "<tbody>";
+
 let tabTop = `<table><thead>
-                <th>Customer</th><th>Product</th>
-                <th>Quantity</th><th>Subtotal</th><th>Discount</th><th>Total</th>
+                <th>Name</th><th>Product</th>
+                <th>Quantity</th><th>Promo Code</th><th>Postal Code</th><th>Phone Number</th>
                 </thead>`;
 let tabBot = "</tbody></table>";
 let content = "<tbody>";
@@ -57,30 +64,31 @@ const validateWithRegExp = (regExp, inputString) => {
 const addOrder = () => {
     let postalRegEx = /^[a-zA-Z]\d[a-zA-Z]\s\d[a-zA-Z]\d$/;
     let phoneRegEx = /^\(?\d{3}\)?(\s|-)\d{3}(\s|-)\d{4}$/;
-    
+
     // Extract the information from the form
     let thisForm = document.forms["orderForm"];
     let name = thisForm["name"].value;
     let productType = thisForm["productType"].value;
     let quantity = thisForm["quantity"].value;
     let promoCode = thisForm["promoCode"].value;
+    let postalCode = thisForm["postalCode"].value;
     let phoneNumber = thisForm["phoneNumber"].value;
 
 
-    // Get the price of the product
-    let productPrice = getPrice(productType);
+    // // Get the price of the product
+    // let productPrice = getPrice(productType);
 
-    // Calculate the subtotal
-    let subTotal = productPrice * quantity;
+    // // Calculate the subtotal
+    // let subTotal = productPrice * quantity;
 
-    // Add the discount and tax
-    let discount = calculateDiscount(subTotal, quantity, promoCode);
-    let total = calculateFinalTotal(subTotal, discount);
+    // // Add the discount and tax
+    // let discount = calculateDiscount(subTotal, quantity, promoCode);
+    // let total = calculateFinalTotal(subTotal, discount);
     
 
-    // content += `<tr><td>${name}</td><td>${phoneNumber}</td>
-    //             <td>${reservationDate}</td><td>${option}</td><td>${timeFrame}</td><td>${specialInstructions}</td></tr>`;
-    // document.getElementById("right").innerHTML = tabTop + content + tabBot;
+    content += `<tr><td>${name}</td><td>${productType}</td><td>${quantity}</td><td>${promoCode}</td>
+                <td>${postalCode}</td><td>${phoneNumber}</td></tr>`;
+    document.getElementById("right").innerHTML = tabTop + content + tabBot;
 
     return false;
 }
