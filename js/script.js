@@ -1,5 +1,5 @@
 // Prepare the table to display the results
-let tabTop = `<table><thead>
+let tabTop = `<h2>Receipt</h2><table><thead>
                 <th>Customer</th><th>Product</th>
                 <th>Quantity</th><th>Subtotal</th><th>Discount</th><th>Total</th>
                 </thead>`;
@@ -66,16 +66,36 @@ const validateWithRegExp = (regExp, inputString) => {
 // Updates the summary section
 const updateSummary = (totalOrders, totalQuantity, totalRevenue, invalidInput) => {
     let summary = document.getElementById("summary");
+    let message = document.getElementById("message");
 
     // Check to see if there was invalid input
     if(invalidInput) {
-        // If so, print an error message to the summary
-        summary.textContent = "Error: Invalid input";
+        // If so, print an error message to the message section
+        // But first, clear the previous message
+        message.innerHTML = "";
+
+        let messageTitle = document.createElement("h2");
+        messageTitle.textContent = "Message";
+        message.appendChild(messageTitle);
+
+        let messageP = document.createElement("p");
+        messageP.textContent = "Error: Invalid input";
+        message.appendChild(messageP);
     }
     // Otherwise, print the summary to the page
     else {
-        // Clear the summary
+        // Clear the summary and the message
         summary.innerHTML = "";
+        message.innerHTML = "";
+
+        // Print a success message to the message section
+        let messageTitle = document.createElement("h2");
+        messageTitle.textContent = "Message";
+        message.appendChild(messageTitle);
+
+        let messageP = document.createElement("p");
+        messageP.textContent = "Success!";
+        message.appendChild(messageP);
     
         // Create the heading
         let summaryTitle = document.createElement("h2");
